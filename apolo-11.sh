@@ -35,7 +35,7 @@ fn_valida_directorio(){
 
 }
 
-
+#Otro cambio 2 pero desde el pc propuesto por Carlos
 
 
 
