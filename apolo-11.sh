@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+#Edicion Propuesta por Carlos
 # Funcion para crear archivos
 fn_crear_archivo(){
 
