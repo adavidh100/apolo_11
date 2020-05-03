@@ -1,40 +1,37 @@
 #!/bin/bash
 
-#Edicion Propuesta por Carlos
-#Edicion 2 desde el pc
-#test1proposethechange
+
 # Funcion para crear archivos
 fn_crear_archivo(){
 
-	echo $1
-	echo $2
-	echo $3
-	echo $4
-	echo $5
-	echo $#
+	echo "Ruta del archivo : "$1
+	echo "Contenido del archivo : "$2
+	echo "Nombre del archivo : "$3	
+	echo "Numero de parametros enviados a la funcion : "$#
 
-	vSiglaProyecto=$1
-	vRutaArchivo=$2
-	vContenidoArchivo=$3
-	vFecha=$(date +%d-%m-%y)
-	vNumeroArchivo=$4
-	vSubcarpetas=$5
-	vNombreArchivo="APL["$vSiglaProyecto"]0000"$vNumeroArchivo".log"
-	echo $vRutaArchivo/$vFecha/$vNombreArchivo
+	vRutaArchivo=$1
+	vContenidoArchivo=$2
+	vNombreArchivo=$3
+
+	fn_valida_directorio  $vRutaArchivo
+
+	echo "Se crea el archivo : "$vNombreArchivo" en la ruta "$vRutaArchivo/$vNombreArchivo
+	echo $vContenidoArchivo > $vRutaArchivo/$vNombreArchivo
 	
 }
 
 fn_valida_directorio(){
-	echo $1
+
+	echo "Ruta enviada a la funcion fn_valida_directorio : "$1
 
 	vRuta=$1
 
 	if [ -d $vRuta ]; then
-		echo "El directorio existe"	
+		echo "El directorio ya existe"	
 	else 
+		echo "Se creara la ruta [OK]"
 		mkdir -p $vRuta
 	fi
-
 }
 
 
@@ -61,24 +58,47 @@ opcionesArchivo=("unknow" "excelent" "good" "warning" "kill")
 subcarpetas=("devices" "logsapolo11" "config" "stats")
 
 
-ruta="$pwd/cloudera/takeoff-mission"
-echo $ruta
+ruta=$(pwd)"/cloudera/takeoff-mission"
+
+contadorArchivos=1
+
 fn_valida_directorio $ruta
 
-echo $ruta/{${vSubcarpetas[0]},${subcarpetas[1]},${subcarpetas[2]},${subcarpetas[3]}}
+#echo $ruta/{${subcarpetas[0]},${subcarpetas[1]},${subcarpetas[2]},${subcarpetas[3]}}
 
 #mkdir $ruta/{${vSubcarpetas[0]},${subcarpetas[1]},${subcarpetas[2]},${subcarpetas[3]}}
 
 #mkdir -p $ruta
 
+nombreGrupo="nasa"
+
+sudo groupadd $nombreGrupo 2>/dev/null
+
 
 # generador de numeros aleatorios entre 0 - 4 echo $(($RANDOM%4))
 
-let indexSiglaProyecto="echo $(($RANDOM%4))"
+while [ $contadorArchivos -le 100 ]; do
 
-let indexOpcionesArchivo="echo $(($RANDOM%5))"
+	let indexSiglaProyecto=$(($RANDOM%${#siglaProyecto[@]}))
+	echo "Numero de proyectos : " ${#siglaProyecto[@]}
 
-#fn_crear_archivo ${siglaProyecto[1]} $ruta ${opcionesArchivo[2]} 1 ${vSubcarpetas[0]}
-fn_crear_archivo ${siglaProyecto[$indexSiglaProyecto]} $ruta ${opcionesArchivo[$indexOpcionesArchivo]} 1 ${vSubcarpetas[0]}
+	let indexOpcionesArchivo=$(($RANDOM%${#opcionesArchivo[@]}))
+	echo "Numero de resultados que puede contener el LOG : "${#opcionesArchivo[@]}
+
+	nombreArchivo="APL"${siglaProyecto[$indexSiglaProyecto]}"0000"$contadorArchivos".log"
+	sudo adduser ${siglaProyecto[$indexSiglaProyecto]}	2>/dev/null
+
+	fecha=$(date +%d-%m-%y)
+	ruta=$ruta/${subcarpetas[0]}/$fecha
+
+	fn_crear_archivo $ruta ${opcionesArchivo[$indexOpcionesArchivo]} $nombreArchivo
+	sudo chown :$nombreGrupo $ruta/$nombreArchivo
+	sudo chown ${siglaProyecto[$indexSiglaProyecto]} $ruta/$nombreArchivo
+	let contadorArchivos=$contadorArchivos+1
+	ruta=$(pwd)"/cloudera/takeoff-mission"
+
+
+done
+
 
 
