@@ -2,6 +2,7 @@
 
 #Edicion Propuesta por Carlos
 #Edicion 2 desde el pc
+#test1proposethechange
 # Funcion para crear archivos
 fn_crear_archivo(){
 
