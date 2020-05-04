@@ -1,20 +1,20 @@
-#version 2.0
 fn_crearEstructura(){
 	echo "Iniciando crearEstructura con directorio raiz: " $1
 
 
-	for ((i=0; i < ${#subcarpetas[@]}; i++))
+for ((i=0; i < ${#subcarpetas[@]}; i++))
     do
-        rutaCompleta=$1${subcarpetas[$i]}
-        echo "creando" ${subcarpetas[$i] "en "$1}
+        rutaCompleta=$1/${subcarpetas[$i]}
+        echo "creando" ${subcarpetas[$i]} "en" $1
         if [ -d $rutaCompleta ]; then
-            echo $rutaCompleta "Resultado: ya existia"
+            echo "Resultado: ya existia"
         else
             mkdir $rutaCompleta 
-            echo $rutaCompleta "Resultado:  no existia y lo cree"
+            echo  "Resultado:  no existia y lo cree"
         fi
     done 
 }
+
 
 fn_valida_directorio(){
 	echo "Recibi como parametro: " $1
@@ -41,9 +41,15 @@ source $PATH2/config.ini
 #echo ${subcarpetas[@]}
 }
 clear
-echo "Empezando Programa Prueba"
+echo "Empezando Programa Prueba3"
 echo "1. Carga de parametros archivo config.ini"
 fn_cargarConfigIni
 echo "2. Validar Directorio Starting..."
-directorioRaiz="/mnt/hgfs/apolo_11/carlos/"
+#directorioRaiz="/mnt/hgfs/GitHub/apolo_11/carlos/"
+#variable= $directorioRaiz | tr -d '\r'
+#echo "puliendo variable" $variable
 fn_valida_directorio $directorioRaiz
+echo "Finalizacion exitosa"
+cd carlos
+ls
+cd ..
